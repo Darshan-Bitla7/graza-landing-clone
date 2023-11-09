@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>"Drizzle" & "Sizzle"</title>
+    <link rel="icon" href="fav.png" type="image/x-icon" />
+    <link
+      href="https://db.onlinewebfonts.com/c/880dddf972fcd402b08f472d2b94f585?family=GT+Alpina+Typewriter"
+      rel="stylesheet"
+    />
+    <link
+      href="https://db.onlinewebfonts.com/c/3df318d48b6fb6d16bd5736bb09b9645?family=GT+Alpina+Typewriter+Bold"
+      rel="stylesheet"
+    />
+    <link
+      href="https://db.onlinewebfonts.com/c/2e915032b738218b849bda311ed3a32d?family=GT+Alpina+Typewriter+Regular"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/354b6f899d.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          screens: {
+            sm: "480px",
+            md: "768px",
+            lg: "1024px",
+            xl: "1440px",
+          },
+          extend: {
+            colors: {
+              clifford: "#da373d",
+              offg: "#d1e030",
+              accent: "#fff4ec",
+              main: "#3c422e",
+              back: "#f6e6d9",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @font-face {
+        font-family: ITC;
+        src: url(ITC\ Garamond\ Std\ Book\ Condensed.otf) format("opentype");
+      }
+      @font-face {
+        font-family: ITC-lt;
+        src: url(Garamond\ ITC\ Condensed\ BQ\ Regular.otf) format("opentype");
+      }
+      /* Navbar Styling */
+      @media screen and (max-width: 1023px) {
+        #pc-nav {
+          display: none;
+        }
+      }
+      @media screen and (min-width: 1024px) {
+        #mobile-nav {
+          display: none;
+        }
+      }
+      #mynav {
+        height: 100%;
+        position: fixed; /* Stay in place */
+        left: 0;
+        top: 0;
+        overflow-x: hidden;
+        transition: 0.5s;
+      }
+      .closebtn {
+        position: absolute;
+        top: 35px;
+        right: 35px;
+        font-size: 60px;
+      }
+      .dull {
+        font-family: "GT Alpina Typewriter", "monospace";
+      }
+
+      /* Hero Styling */
+      .hero {
+        display: flex;
+      }
+      .carousel-container {
+        position: relative;
+        width: 100%;
+        max-width: 50vw; /* Set your desired container width */
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .carousel-slides {
+        display: flex;
+        transition: transform 0.5s ease-in-out;
+        height: 100%;
+      }
+
+      .carousel-slide {
+        flex: 0 0 100%;
+        height: 100%;
+      }
+
+      .carousel-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .carousel-preview {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .carousel-circle {
+        width: 60px;
+        height: 60px;
+        border: 2px solid #555;
+        border-radius: 50%;
+        margin: 5px 0;
+        cursor: pointer;
+        overflow: hidden;
+      }
+
+      .carousel-circle img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .carousel-circle.active {
+        background-color: #555;
+      }
+      .carousel-circle.active {
+        background-color: #555;
+        border: 2px solid white;
+      }
+      .cart-container {
+        width: 100%;
+        max-width: 50vw;
+        height: 100vh;
+        overflow: scroll;
+      }
+
+      .box {
+        flex: 1;
+        margin: 0 6px;
+        cursor: pointer;
+      }
+
+      .selected {
+        background-color: #9eef80;
+      }
+
+      .cartButton {
+        box-shadow: 4px 4px rgba(0, 0, 0, 0.2);
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+      }
+      .cartButton:hover {
+        box-shadow: 0px 0px rgba(0, 0, 0, 0.4);
+        transform: translate(4px, 4px);
+      }
+
+      /* Hide the default radio button */
+      input[type="radio"] {
+        opacity: 0;
+        position: absolute;
+      }
+
+      /* Style the custom radio button */
+      input[type="radio"] + label::before {
+        content: "";
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 1px solid #3c422e;
+        border-radius: 50%;
+        margin-right: 10px;
+        transition: border-color 0.3s, background-color 0.3s;
+      }
+
+      /* Style the custom radio button when checked */
+      input[type="radio"]:checked + label::before {
+        background-color: #9eef80;
+      }
+
+      #dropdown-menu {
+        display: none;
+      }
+
+      @media screen and (max-width: 1023px) {
+        .hero {
+          display: block; /* Change to display block when screen width is below 1024px */
+        }
+
+        .carousel-container {
+          width: 100vw; /* Change to 100vw when screen width is below 1024px */
+          max-width: 100%; /* Change to 100% to occupy full screen width */
+        }
+        .cart-container {
+          width: 100%;
+          max-width: 100vw;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      background-color: #f6e6d9;
+      color: #3c422e;
+      font-family: 'GT Alpina Typewriter', 'monospace';
+    "
+  >
+    <!-- Navbar -->
+    <div class="border-b--solid z-header relative">
+      <div
+        class="text-center flex justify-center uppercase text-xs"
+        style="
+          font-family: 'GT Alpina Typewriter Regular', 'monospace';
+          z-index: 2;
+        "
+      >
+        FREE SHIPPING OVER $60.00 :-)
+      </div>
+      <hr class="border-black" />
+    </div>
+    <nav
+      id="pc-nav"
+      class="relative container mx-auto px-5 mt-3 z-50"
+      style="font-family: 'GT Alpina Typewriter Regular', 'monospace'"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <img id="logo" class="w-50 h-14" src="logo.png" alt="" />
+        </div>
+        <div class="flex items-center">
+          <div id="links" class="flex space-x-10 mr-10">
+            <a href="">Shop</a>
+            <a href="">About Us</a>
+            <a href="">Glog</a>
+            <a href="">FAQs</a>
+            <a href="">Account</a>
+            <a href="">Very Cool Subscription</a>
+          </div>
+          <button
+            class="rounded-full px-4 py-2 bg-accent hover:bg-offg border border-black"
+          >
+            <span id="cart" class="mr-1">Cart</span><span>[0]</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+    <nav
+      id="mobile-nav"
+      class="relative container mx-auto px-5 mt-3 z-50"
+      style="font-family: 'GT Alpina Typewriter Regular', 'monospace'"
+    >
+      <div class="flex items-center justify-between">
+        <button id="menuToggle" onclick="openNav()" class="lg:hidden">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="30"
+            height="30"
+            fill="currentColor"
+            class="bi bi-list"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M2 2.5A.5.5 0 0 1 2.5 2h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zM2 5.5A.5.5 0 0 1 2.5 5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zM2 8.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zM2 11.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
+            />
+          </svg>
+        </button>
+        <div>
+          <img id="logo" class="lg:w-50 h-14" src="logo.png" alt="" />
+        </div>
+        <button
+          class="rounded-full px-4 py-2 lg:bg-accent lg:hover:bg-offg lg:border border-black"
+        >
+          <span id="cart" class="hidden lg:inline-block mr-1">Cart</span
+          ><span>[0]</span>
+        </button>
+      </div>
+    </nav>
+
+    <div
+      class="fixed inset-0 bg-offg pl-10 pr-10 z-10"
+      id="myNav"
+      style="
+        display: none;
+        font-family: 'GT Alpina Typewriter Regular', 'monospace';
+      "
+    >
+      <a href="" class="closebtn" onclick="closeNav()">&times;</a>
+      <ul
+        class="container pt-32 pb-36 grid grid-cols-2 content-start gap-y-10 gap-x-gutter text-18 h-full overflow-auto transition--std"
+      >
+        <li class="col-span-2">
+          <a href="" class="font-medium">Shop</a>
+          <ul class="border-t--dashed xs:mb-gutter">
+            <li
+              class="py-5 border border-dashed border-black border-r-0 border-l-0"
+            >
+              <a href="" class="relative flex items-center group lg:pr-16">
+                <div
+                  class="w-40 xs:w-custom flex-shrink-0 lg:w-40 mr-16 lg:mr-10"
+                  style="--size: 100px"
+                >
+                  <div class="aspect-1-1 w-full mr-16 lg:mr-10">
+                    <img
+                      class="aspect-child object-top rounded-10 lg:rounded-4"
+                      src="dz.avif"
+                      alt="Drizzle"
+                      width="100"
+                      height="100"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <div class="leading-tight lg:pr-16">
+                  <p class="font-medium">"Drizzle" & "Sizzle"</p>
+                  <span class="dull">Variety Pack</span>
+                </div>
+              </a>
+            </li>
+            <li
+              class="py-5 border border-dashed border-black border-t-0 border-r-0 border-l-0"
+            >
+              <a href="" class="relative flex items-center group lg:pr-16">
+                <div
+                  class="w-40 xs:w-custom flex-shrink-0 lg:w-40 mr-16 lg:mr-10"
+                  style="--size: 100px"
+                >
+                  <div class="aspect-1-1 w-full mr-16 lg:mr-10">
+                    <img
+                      class="aspect-child object-top rounded-10 lg:rounded-4"
+                      src="n2.avif"
+                      alt="Drizzle"
+                      width="100"
+                      height="100"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <div class="leading-tight lg:pr-16">
+                  <p class="font-medium">"Drizzle"</p>
+                  <span class="dull">Finishing Oil</span>
+                </div>
+              </a>
+            </li>
+            <li
+              class="py-5 border border-dashed border-black border-t-0 border-r-0 border-l-0"
+            >
+              <a href="" class="relative flex items-center group lg:pr-16">
+                <div
+                  class="w-40 xs:w-custom flex-shrink-0 lg:w-40 mr-16 lg:mr-10"
+                  style="--size: 100px"
+                >
+                  <div class="aspect-1-1 w-full mr-16 lg:mr-10">
+                    <img
+                      class="aspect-child object-top rounded-10 lg:rounded-4"
+                      src="n3.avif"
+                      alt="Drizzle"
+                      width="100"
+                      height="100"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <div class="leading-tight lg:pr-16">
+                  <p class="font-medium">"Sizzle"</p>
+                  <span class="dull">Cooking Oil</span>
+                </div>
+              </a>
+            </li>
+            <li
+              class="py-5 border border-dashed border-black border-t-0 border-r-0 border-l-0"
+            >
+              <a href="" class="relative flex items-center group lg:pr-16">
+                <div
+                  class="w-40 xs:w-custom flex-shrink-0 lg:w-40 mr-16 lg:mr-10"
+                  style="--size: 100px"
+                >
+                  <div class="aspect-1-1 w-full mr-16 lg:mr-10">
+                    <img
+                      class="aspect-child object-top rounded-10 lg:rounded-4"
+                      src="n4.avif"
+                      alt="Drizzle"
+                      width="100"
+                      height="100"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <div class="leading-tight lg:pr-16">
+                  <p class="font-medium">"The Gift Set"</p>
+                </div>
+              </a>
+            </li>
+            <li
+              class="py-5 border border-dashed border-black border-t-0 border-r-0 border-l-0"
+            >
+              <a href="" class="relative flex items-center group lg:pr-16">
+                <div
+                  class="w-40 xs:w-custom flex-shrink-0 lg:w-40 mr-16 lg:mr-10"
+                  style="--size: 100px"
+                >
+                  <div class="aspect-1-1 w-full mr-16 lg:mr-10">
+                    <img
+                      class="aspect-child object-top rounded-10 lg:rounded-4"
+                      src="n5.avif"
+                      alt="Drizzle"
+                      width="100"
+                      height="100"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <div class="leading-tight lg:pr-16">
+                  <p class="font-medium">"The Mitts" - Graza x Dusen Dusen</p>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="col-span-1">
+          <a href="" class="font-medium">About Us</a>
+        </li>
+        <li class="col-span-1">
+          <a href="" class="font-medium">Glog</a>
+        </li>
+        <li class="col-span-1">
+          <a href="" class="font-medium">FAQs</a>
+        </li>
+        <li class="col-span-1">
+          <a href="" class="font-medium">Account</a>
+        </li>
+        <li class="col-span-1">
+          <a href="" class="font-medium">Subscribe</a>
+        </li>
+        <li class="col-span-1">
+          <a href="" class="font-medium">Stocklists</a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero z-0" style="margin-top: -68px">
+      <div class="carousel-container">
+        <div class="carousel-slides">
+          <div class="carousel-slide"><img src="s1.webp" alt="Image 1" /></div>
+          <div class="carousel-slide"><img src="s2.webp" alt="Image 2" /></div>
+          <div class="carousel-slide"><img src="s3.webp" alt="Image 3" /></div>
+          <div class="carousel-slide"><img src="s4.jpeg" alt="Image 4" /></div>
+          <div class="carousel-slide"><img src="s5.webp" alt="Image 5" /></div>
+          <div class="carousel-slide"><img src="s6.webp" alt="Image 6" /></div>
+        </div>
+        <div class="carousel-preview">
+          <div class="carousel-circle" data-index="0">
+            <img src="s1.webp" alt="Image 1" />
+          </div>
+          <div class="carousel-circle" data-index="1">
+            <img src="s2.webp" alt="Image 2" />
+          </div>
+          <div class="carousel-circle" data-index="2">
+            <img src="s3.webp" alt="Image 3" />
+          </div>
+          <div class="carousel-circle" data-index="3">
+            <img src="s4.jpeg" alt="Image 4" />
+          </div>
+          <div class="carousel-circle" data-index="4">
+            <img src="s5.webp" alt="Image 5" />
+          </div>
+          <div class="carousel-circle" data-index="5">
+            <img src="s6.webp" alt="Image 6" />
+          </div>
+        </div>
+      </div>
+      <div class="cart-container py-36 flex flex-col items-center mx-auto">
+        <div
+          class="container flex flex-col justify-center items-center w-fit mx-auto"
+        >
+          <h2
+            class="relative flex flex-col justify-center items-center w-fit mx-auto"
+          >
+            <p
+              class="h3"
+              style="
+                font-size: 52px;
+                line-height: 1.6;
+                margin-top: -12px;
+                font-family: 'ITC-lt', 'serif';
+              "
+            >
+              "Drizzle" & "Sizzle"
+            </p>
+            <p
+              class="h3 border border-b-2 border-t-0 border-l-0 border-r-0 border-black w-fit -mt-3"
+              style="
+                --size: -10px;
+                line-height: 0.8;
+                font-family: 'ITC-lt', 'serif';
+                font-size: 52px;
+              "
+            >
+              Extra Virgin Olive Oil
+            </p>
+            <p class="flex mt-5">
+              <span class="flex"
+                ><img style="height: 18px" src="icons8-star-100.png" alt="" />
+                <img style="height: 18px" src="icons8-star-100.png" alt="" />
+                <img style="height: 18px" src="icons8-star-100.png" alt="" />
+                <img style="height: 18px" src="icons8-star-100.png" alt="" />
+                <img
+                  style="height: 18px"
+                  src="icons8-star-100.png"
+                  alt=""
+                /> </span
+              ><span
+                class="ml-2 flex justify-center items-center"
+                style="font-family: 'GT Alpina Typewriter Regular', 'monospace'"
+                >885 Reviews</span
+              >
+            </p>
+          </h2>
+        </div>
+        <div
+          class="cart flex flex-col mx-auto bg-accent p-5 border border-black rounded-3xl mt-10"
+          style="
+            width: 70%;
+            font-family: 'GT Alpina Typewriter Regular', 'monospace';
+          "
+        >
+          <div class="quantity">
+            Quantity
+            <div class="boxes flex justify-between mb-2 mt-2">
+              <div
+                class="box selected flex flex-col text-center border border-black rounded-lg"
+                data-box-number="1"
+              >
+                <div style="font-size: 24px"><span>1</span></div>
+                <div><span>Set</span></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    font-family: 'GT Alpina Typewriter', 'monospace';
+                  "
+                >
+                  <span id="box1disc"></span>
+                </div>
+              </div>
+              <div
+                class="box flex flex-col text-center border border-black rounded-lg"
+                data-box-number="2"
+              >
+                <div style="font-size: 24px"><span>2</span></div>
+                <div><span>Sets</span></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    font-family: 'GT Alpina Typewriter', 'monospace';
+                  "
+                >
+                  <span>Free Shipping</span>
+                </div>
+                <div
+                  style="
+                    font-size: 10px;
+                    font-family: 'GT Alpina Typewriter', 'monospace';
+                  "
+                >
+                  <span id="box2disc">+7% Off</span>
+                </div>
+              </div>
+              <div
+                class="box flex flex-col text-center border border-black rounded-lg"
+                data-box-number="3"
+              >
+                <div style="font-size: 24px"><span>3</span></div>
+                <div><span>Sets</span></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    font-family: 'GT Alpina Typewriter', 'monospace';
+                  "
+                >
+                  <span>Free Shipping</span>
+                </div>
+                <div
+                  style="
+                    font-size: 10px;
+                    font-family: 'GT Alpina Typewriter', 'monospace';
+                  "
+                >
+                  <span id="box3disc">+9% Off</span>
+                </div>
+              </div>
+              <div
+                class="box flex flex-col text-center border border-black rounded-lg"
+                data-box-number="4"
+              >
+                <div style="font-size: 24px"><span>6</span></div>
+                <div><span>Sets</span></div>
+                <div
+                  style="
+                    font-size: 10px;
+                    font-family: 'GT Alpina Typewriter', 'monospace';
+                  "
+                >
+                  <span>Free Shipping</span>
+                </div>
+                <div
+                  style="
+                    font-size: 10px;
+                    font-family: 'GT Alpina Typewriter', 'monospace';
+                  "
+                >
+                  <span id="box4disc">+11% Off</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="one-time flex items-center justify-between border border-dashed border-main border-l-0 border-r-0 p-4"
+          >
+            <div class="flex items-center">
+              <input
+                class="mr-2 selected-radio"
+                style="height: 20px; width: 20px"
+                type="radio"
+                id="one-time"
+                name="purchase"
+                checked
+              />
+              <label for="one-time">One Time Purchase</label>
+            </div>
+            <div>
+              <span id="otp-val-disc" class="line-through opacity-50"></span>
+              <span id="otp-val">$37</span>
+            </div>
+          </div>
+          <div
+            class="subs flex items-center justify-between border border-dashed border-main border-t-0 border-l-0 border-r-0 p-4"
+          >
+            <div class="flex items-center">
+              <input
+                class="mr-2 selected-radio"
+                style="height: 20px; width: 20px"
+                type="radio"
+                id="subs"
+                name="purchase"
+              />
+              <label for="subs">Subscribe & Save</label>
+            </div>
+            <div>
+              <span id="subs-val" class="line-through opacity-50">$37</span>
+              <span id="subs-val-disc">$33.30</span>
+            </div>
+          </div>
+          <div
+            id="freq"
+            class="w-100 flex items-center border border-dashed border-main border-t-0 border-l-0 border-r-0 p-4"
+          >
+            <div class="freq" style="width: 100% !important">
+              <button
+                class="rounded-xl border border-black"
+                style="width: 100% !important"
+                onclick="toggleDropdown()"
+              >
+                <div
+                  id="dropdownMenuButton"
+                  class="text-left hover:bg-back px-2 py-1 rounded-xl"
+                  style="width: 100% !important"
+                >
+                  Frequency: Every 1 month
+                </div>
+                <div
+                  id="dropdown-menu"
+                  class="dropdown-menu flex flex-col text-left"
+                  aria-labelledby="dropdownMenuButton"
+                >
+                  <a
+                    class="dropdown-item hover:bg-back py-1 pl-28"
+                    href="#"
+                    onclick="changeFrequency('Every 1 month')"
+                    >Every 1 month</a
+                  >
+                  <a
+                    class="dropdown-item hover:bg-back py-1 pl-28"
+                    href="#"
+                    onclick="changeFrequency('Every 2 months')"
+                    >Every 2 months</a
+                  >
+                  <a
+                    class="dropdown-item hover:bg-back py-1 pl-28 rounded-xl"
+                    href="#"
+                    onclick="changeFrequency('Every 3 months')"
+                    >Every 3 months</a
+                  >
+                </div>
+              </button>
+            </div>
+          </div>
+          <div class="add flex items-center text-center">
+            <button
+              class="cartButton w-full mt-4 rounded-full px-4 py-2 bg-offg border border-black"
+            >
+              <span id="chosen-purchase" class="mr-1">Add to Cart - </span
+              ><span id="final-val">$37</span>
+            </button>
+          </div>
+          <div>
+            <p
+              id="disclaimer"
+              class="text-center mt-4"
+              style="
+                font-size: 14px;
+                font-family: 'GT Alpina Typewriter', 'monospace';
+              "
+            >
+              Skip or Cancel Anytime
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      //For navbar
+      function openNav() {
+        document.getElementById("myNav").style.display = "block";
+      }
+      function closeNav() {
+        document.getElementById("myNav").style.display = "none";
+      }
+
+      function checkWindowWidth() {
+        if (window.innerWidth >= 1024) {
+          document.getElementById("myNav").style.display = "none";
+        }
+      }
+      window.addEventListener("resize", checkWindowWidth);
+      checkWindowWidth();
+    </script>
+
+    <script>
+      //For carousel
+      const slides = document.querySelector(".carousel-slides");
+      const circles = document.querySelectorAll(".carousel-circle");
+
+      circles.forEach((circle, index) => {
+        circle.addEventListener("click", () => {
+          setActiveSlide(index);
+        });
+      });
+
+      function setActiveSlide(index) {
+        slides.style.transform = `translateX(-${index * 100}%)`;
+        circles.forEach((circle, i) => {
+          circle.classList.toggle("active", i === index);
+        });
+      }
+
+      setActiveSlide(0); // Initialize with the first image as active
+    </script>
+
+    <script>
+      //For cart Pricing
+      const boxes = document.querySelectorAll(".box");
+      const oneTimeRadio = document.getElementById("one-time");
+      const subsRadio = document.getElementById("subs");
+      const otpVal = document.getElementById("otp-val");
+      const otpValDisc = document.getElementById("otp-val-disc");
+      const subsVal = document.getElementById("subs-val");
+      const subsValDisc = document.getElementById("subs-val-disc");
+      const chosenPurchase = document.getElementById("chosen-purchase");
+      const finalVal = document.getElementById("final-val");
+      const box1disc = document.getElementById("box1disc");
+      const box2disc = document.getElementById("box2disc");
+      const box3disc = document.getElementById("box3disc");
+      const box4disc = document.getElementById("box4disc");
+      const freq = document.getElementById("freq");
+
+      // Function to update the text based on the selected box and radio button
+      function updateText() {
+        let selectedBox = document.querySelector(".box.selected");
+        if (selectedBox) {
+          if (selectedBox.getAttribute("data-box-number") === "1") {
+            otpVal.textContent = "$37";
+            otpValDisc.textContent = "";
+            subsVal.textContent = "$37";
+            subsValDisc.textContent = "$33.30";
+          } else if (selectedBox.getAttribute("data-box-number") === "2") {
+            otpVal.textContent = "$69";
+            otpValDisc.textContent = "$74";
+            subsVal.textContent = "$74";
+            subsValDisc.textContent = "$64.17";
+          } else if (selectedBox.getAttribute("data-box-number") === "3") {
+            otpVal.textContent = "$102";
+            otpValDisc.textContent = "$111";
+            subsVal.textContent = "$111";
+            subsValDisc.textContent = "$94.86";
+          } else if (selectedBox.getAttribute("data-box-number") === "4") {
+            otpVal.textContent = "$199";
+            otpValDisc.textContent = "$222";
+            subsVal.textContent = "$222";
+            subsValDisc.textContent = "$185.07";
+          }
+        }
+
+        if (oneTimeRadio.checked) {
+          chosenPurchase.textContent = "Add to Cart - ";
+          finalVal.textContent = otpVal.textContent;
+          document.getElementById("disclaimer").textContent = "";
+          box1disc.textContent = "";
+          box2disc.textContent = "+7% Off";
+          box3disc.textContent = "+9% Off";
+          box4disc.textContent = "+11% Off";
+          freq.style.display = "none";
+        } else if (subsRadio.checked) {
+          chosenPurchase.textContent = "Subscribe - ";
+          finalVal.textContent = subsValDisc.textContent;
+          document.getElementById("disclaimer").textContent =
+            "Skip or Cancel Anytime";
+          box1disc.textContent = "+10% Off";
+          box2disc.textContent = "+14% Off";
+          box3disc.textContent = "+15% Off";
+          box4disc.textContent = "+17% Off";
+          freq.style.display = "block";
+        }
+      }
+
+      oneTimeRadio.addEventListener("change", updateText);
+      subsRadio.addEventListener("change", updateText);
+
+      boxes.forEach((box) => {
+        box.addEventListener("click", () => {
+          boxes.forEach((b) => b.classList.remove("selected"));
+          box.classList.add("selected");
+          updateText();
+        });
+      });
+
+      // Initial call to set the initial text
+      updateText();
+    </script>
+
+    <script>
+      // For dropdown
+      let isDropdownVisible = false;
+      function toggleDropdown() {
+        const dropdownMenu = document.getElementById("dropdown-menu");
+        isDropdownVisible = !isDropdownVisible;
+        dropdownMenu.style.display = isDropdownVisible ? "flex" : "none";
+      }
+
+      function changeFrequency(frequency) {
+        document.getElementById("dropdownMenuButton").innerHTML =
+          "Frequency: " + frequency;
+        toggleDropdown();
+      }
+    </script>
+  </body>
+</html>
